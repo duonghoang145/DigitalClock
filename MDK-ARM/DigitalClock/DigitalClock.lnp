@@ -1,0 +1,27 @@
+--cpu Cortex-M3
+"digitalclock\startup_stm32f103xb.o"
+"digitalclock\clcd_i2c.o"
+"digitalclock\ds3231.o"
+"digitalclock\main.o"
+"digitalclock\stm32f1xx_it.o"
+"digitalclock\stm32f1xx_hal_msp.o"
+"digitalclock\stm32f1xx_hal_gpio_ex.o"
+"digitalclock\stm32f1xx_hal_i2c.o"
+"digitalclock\stm32f1xx_hal.o"
+"digitalclock\stm32f1xx_hal_rcc.o"
+"digitalclock\stm32f1xx_hal_rcc_ex.o"
+"digitalclock\stm32f1xx_hal_gpio.o"
+"digitalclock\stm32f1xx_hal_dma.o"
+"digitalclock\stm32f1xx_hal_cortex.o"
+"digitalclock\stm32f1xx_hal_pwr.o"
+"digitalclock\stm32f1xx_hal_flash.o"
+"digitalclock\stm32f1xx_hal_flash_ex.o"
+"digitalclock\stm32f1xx_hal_exti.o"
+"digitalclock\stm32f1xx_hal_tim.o"
+"digitalclock\stm32f1xx_hal_tim_ex.o"
+"digitalclock\stm32f1xx_hal_uart.o"
+"digitalclock\system_stm32f1xx.o"
+--strict --scatter "DigitalClock\DigitalClock.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "DigitalClock.map" -o DigitalClock\DigitalClock.axf
