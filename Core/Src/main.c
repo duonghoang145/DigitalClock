@@ -31,11 +31,6 @@
 uint8_t device;
 DS3231_Name DS3231;
 CLCD_I2C_Name LCD1;
-uint8_t u8_RxBuff[20]; // buffer luu chuoi nhan duoc
-uint8_t u8_RxData; // luu byte nhan duoc
-uint8_t u8_TxBuff[20] = "Date/Time\n"; // buffer truyen di
-uint8_t _rxIndex; // con tro cua rxbuff
-uint16_t Tx_FLag = 0; 
 char Timebuffer[20];
 char Datebuffer[20];
 char ASCII_Sec[3],ASCII_Min[3],ASCII_Hours[3];
@@ -108,27 +103,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(huart);
-	if(huart->Instance == USART1)
-	{
-		if(u8_RxData == 13)
-		{
-			DS3231_GetTime(&DS3231);
-			BCD2ASCII(DS3231.RxTimeBuff[0],ASCII_Sec);
-	    BCD2ASCII(DS3231.RxTimeBuff[1],ASCII_Min);
-	    BCD2ASCII(DS3231.RxTimeBuff[2],ASCII_Hours);
-	    DS3231_GetDate(&DS3231);
-			BCD2ASCII(DS3231.RxDateBuff[0],ASCII_Day);
-	    BCD2ASCII(DS3231.RxDateBuff[1],ASCII_Date);
-	    BCD2ASCII(DS3231.RxDateBuff[2],ASCII_Month);
-			BCD2ASCII(DS3231.RxDateBuff[3],ASCII_Year);
-			sprintf (u8_TxBuff, "%s-%s-%s\n", ASCII_Date, ASCII_Month, ASCII_Year);
-			HAL_UART_Transmit(&huart1, u8_TxBuff, sizeof(u8_TxBuff),100);
-			sprintf (u8_TxBuff, "%s:%s:%s\n", ASCII_Hours,ASCII_Min,ASCII_Sec);
-			HAL_UART_Transmit(&huart1, u8_TxBuff, sizeof(u8_TxBuff),100);
-		}
-		HAL_UART_Receive_IT(&huart1, &u8_RxData, 1);
+	
 //			HAL_UART_Transmit(&huart1, u8_RxBuff, sizeof(u8_RxBuff),100);
-	}
   /* NOTE: This function should not be modified, when the callback is needed,
            the HAL_UART_RxCpltCallback could be implemented in the user file
    */
@@ -177,9 +153,7 @@ int main(void)
 //	CLCD_I2C_WriteString(&LCD1,"Hoang Hai Duong");
 //	CLCD_I2C_SetCursor(&LCD1, 0, 1);
 //	CLCD_I2C_WriteString(&LCD1,"HCMUT");
-  
-  HAL_UART_Transmit(&huart1, u8_TxBuff, sizeof(u8_TxBuff),100);
-  HAL_UART_Receive_IT(&huart1, &u8_RxData,1);
+
 for(int i = 0; i<255; i++)
 	{
 		if(HAL_I2C_IsDeviceReady(&hi2c1,i,1,100) == HAL_OK)
