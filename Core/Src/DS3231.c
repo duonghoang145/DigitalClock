@@ -39,6 +39,21 @@ static void I2C_ReadDate(DS3231_Name* DS3231)
 	HAL_I2C_Mem_Read(DS3231->I2C, DS3231_ADDRESS, 3, I2C_MEMADD_SIZE_8BIT, DS3231->RxDateBuff, 4, 1000);
 }
 
+static void I2C_ReadTemp(DS3231_Name* DS3231)
+{
+	HAL_I2C_Mem_Read(DS3231->I2C, DS3231_ADDRESS, 0x11, I2C_MEMADD_SIZE_8BIT, DS3231->TempBuff, 2, 1000);
+}
+void force_temp_conv (DS3231_Name* DS3231)
+{
+	uint8_t status=0;
+	uint8_t control=0;
+	HAL_I2C_Mem_Read(DS3231->I2C, DS3231_ADDRESS, 0x0F, 1, &status, 1, 100);  // read status register
+	if (!(status&0x04))  // if the BSY bit is not set
+	{
+		HAL_I2C_Mem_Read(DS3231->I2C, DS3231_ADDRESS, 0x0E, 1, &control, 1, 100);  // read control register
+		HAL_I2C_Mem_Write(DS3231->I2C, DS3231_ADDRESS, 0x0E, 1, (uint8_t *)(control|(0x20)), 1, 100);  // write modified control register with CONV bit as'1'
+	}
+}
 static uint8_t BCD2DEC(uint8_t data)
 {
 	return (data>>4)*10+ (data&0x0f);
@@ -86,5 +101,11 @@ void DS3231_GetDate(DS3231_Name* DS3231)
 	DS3231->Date = BCD2DEC(DS3231->RxDateBuff[1]);
 	DS3231->Month = BCD2DEC(DS3231->RxDateBuff[2]);
 	DS3231->Year = BCD2DEC(DS3231->RxDateBuff[3]);
+}
+float DS3231_GetTemp(DS3231_Name* DS3231)
+{
+	force_temp_conv(DS3231);
+	I2C_ReadTemp(DS3231);
+	return((DS3231->TempBuff[0])+(DS3231->TempBuff[1]>>6)/4.0);
 }
 

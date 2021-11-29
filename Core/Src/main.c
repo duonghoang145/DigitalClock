@@ -31,10 +31,9 @@
 uint8_t device;
 DS3231_Name DS3231;
 CLCD_I2C_Name LCD1;
-char Timebuffer[20];
-char Datebuffer[20];
-char ASCII_Sec[3],ASCII_Min[3],ASCII_Hours[3];
-char ASCII_Day[3],ASCII_Date[3],ASCII_Month[3],ASCII_Year[3];
+char buffer[16];
+char ASCII[10];
+float Temp;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -52,8 +51,6 @@ I2C_HandleTypeDef hi2c1;
 
 TIM_HandleTypeDef htim2;
 
-UART_HandleTypeDef huart1;
-
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -63,12 +60,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_I2C1_Init(void);
-static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
-static uint8_t DEC2BCD(uint8_t data)
-{
-	return (data/10)<<4|(data%10);
-}
 void BCD2ASCII(uint8_t bcd_value, char * p_ascii_text)
 {
   *p_ascii_text++ = (bcd_value >> 4)  + '0';
@@ -76,39 +68,65 @@ void BCD2ASCII(uint8_t bcd_value, char * p_ascii_text)
 	*p_ascii_text = '\0';
   return;
 }
-
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)/*Ham timer ngat*/
+void MonthPrint(uint8_t Month)
 {
-	UNUSED(htim);
-	DS3231_GetTime(&DS3231);
-	BCD2ASCII(DS3231.RxTimeBuff[0],ASCII_Sec);
-	BCD2ASCII(DS3231.RxTimeBuff[1],ASCII_Min);
-	BCD2ASCII(DS3231.RxTimeBuff[2],ASCII_Hours);
-	
-	DS3231_GetDate(&DS3231);
-	BCD2ASCII(DS3231.RxDateBuff[0],ASCII_Day);
-	BCD2ASCII(DS3231.RxDateBuff[1],ASCII_Date);
-	BCD2ASCII(DS3231.RxDateBuff[2],ASCII_Month);
-	BCD2ASCII(DS3231.RxDateBuff[3],ASCII_Year);
-	
-	sprintf (Datebuffer, "%s-%s-%s", ASCII_Date, ASCII_Month, ASCII_Year);
-	CLCD_I2C_SetCursor(&LCD1, 5, 0);
-	CLCD_I2C_WriteString(&LCD1,Datebuffer);
-	HAL_Delay(5);
-	sprintf (Timebuffer, "%s:%s:%s", ASCII_Hours, ASCII_Min, ASCII_Sec);
-	CLCD_I2C_SetCursor(&LCD1, 5, 1);
-	CLCD_I2C_WriteString(&LCD1,Timebuffer);
+	if (Month == 1)
+		sprintf(ASCII, "January");
+	else if (Month == 2)
+		sprintf(ASCII, "Febnuary");
+	else if (Month == 3)
+		sprintf(ASCII, "March");
+	else if (Month == 4)
+		sprintf(ASCII, "April");
+	else if (Month == 5)
+		sprintf(ASCII, "May");
+	else if (Month == 6)
+		sprintf(ASCII, "June");
+	else if (Month == 7)
+		sprintf(ASCII, "July");
+	else if (Month == 8)
+		sprintf(ASCII, "August");
+	else if (Month == 9)
+		sprintf(ASCII, "September");
+	else if (Month == 10)
+		sprintf(ASCII, "October");
+	else if (Month == 11)
+		sprintf(ASCII, "November");
+	else if (Month == 12)
+		sprintf(ASCII, "December");
 }
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   /* Prevent unused argument(s) compilation warning */
-  UNUSED(huart);
-	
-//			HAL_UART_Transmit(&huart1, u8_RxBuff, sizeof(u8_RxBuff),100);
-  /* NOTE: This function should not be modified, when the callback is needed,
-           the HAL_UART_RxCpltCallback could be implemented in the user file
-   */
+  UNUSED(GPIO_Pin);
+  if(GPIO_Pin == Nav_Pin)
+	{
+		
+	}
 }
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)/*Ham timer ngat*/
+{
+  UNUSED(htim);
+	DS3231_GetTime(&DS3231);
+	sprintf(buffer, "%02d:%02d:%02d", DS3231.Hours, DS3231.Min, DS3231.Sec);
+	CLCD_I2C_SetCursor(&LCD1, 0, 0);
+	CLCD_I2C_WriteString(&LCD1, buffer);
+	
+	
+	DS3231_GetDate(&DS3231);
+  MonthPrint(DS3231.Month);	
+	sprintf(buffer, "%02d,%s,20%02d", DS3231.Date, ASCII, DS3231.Year);
+	CLCD_I2C_SetCursor(&LCD1, 0, 1);
+	CLCD_I2C_WriteString(&LCD1, buffer);
+		
+	Temp = DS3231_GetTemp(&DS3231);
+	CLCD_I2C_SetCursor(&LCD1, 10, 0);
+	sprintf(buffer, "%.1f", Temp);
+	CLCD_I2C_WriteString(&LCD1, buffer);
+	CLCD_I2C_WriteChar(&LCD1, 223);
+	CLCD_I2C_WriteChar(&LCD1, 67);
+}
+
 
 /* USER CODE END PFP */
 
@@ -146,15 +164,8 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   MX_I2C1_Init();
-  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-	
-//	CLCD_I2C_SetCursor(&LCD1, 0, 0);
-//	CLCD_I2C_WriteString(&LCD1,"Hoang Hai Duong");
-//	CLCD_I2C_SetCursor(&LCD1, 0, 1);
-//	CLCD_I2C_WriteString(&LCD1,"HCMUT");
-
-for(int i = 0; i<255; i++)
+	for(int i = 0; i<255; i++)
 	{
 		if(HAL_I2C_IsDeviceReady(&hi2c1,i,1,100) == HAL_OK)
 		{	
@@ -162,14 +173,10 @@ for(int i = 0; i<255; i++)
 		}
 	}
 	DS3231_Init(&DS3231, &hi2c1);
-//	DS3231_SetTime(&DS3231, 0,5,0);
+//	DS3231_SetTime(&DS3231, 3,2,0);
 //	DS3231_SetDate(&DS3231, 4,29,10,21);
-	CLCD_I2C_Init(&LCD1,&hi2c1,0x3F,16,2);
-	CLCD_I2C_WriteString(&LCD1,"Date");
-	CLCD_I2C_SetCursor(&LCD1,0,1);
-	CLCD_I2C_WriteString(&LCD1,"Time");
+	CLCD_I2C_Init(&LCD1,&hi2c1,0x4E,16,2);
 	HAL_TIM_Base_Start_IT(&htim2);
-	
 	
   /* USER CODE END 2 */
 
@@ -177,7 +184,6 @@ for(int i = 0; i<255; i++)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		
 		
     /* USER CODE END WHILE */
 
@@ -302,39 +308,6 @@ static void MX_TIM2_Init(void)
 }
 
 /**
-  * @brief USART1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_USART1_UART_Init(void)
-{
-
-  /* USER CODE BEGIN USART1_Init 0 */
-
-  /* USER CODE END USART1_Init 0 */
-
-  /* USER CODE BEGIN USART1_Init 1 */
-
-  /* USER CODE END USART1_Init 1 */
-  huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
-  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  huart1.Init.StopBits = UART_STOPBITS_1;
-  huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
-  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART1_Init 2 */
-
-  /* USER CODE END USART1_Init 2 */
-
-}
-
-/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -349,24 +322,36 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LED_B_GPIO_Port, LED_B_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : LED_Pin */
-  GPIO_InitStruct.Pin = LED_Pin;
+  /*Configure GPIO pin : PC13 */
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LED_B_Pin */
-  GPIO_InitStruct.Pin = LED_B_Pin;
+  /*Configure GPIO pins : Mode_Pin OK_Pin Inc_Pin Nav_Pin */
+  GPIO_InitStruct.Pin = Mode_Pin|OK_Pin|Inc_Pin|Nav_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : Alarm_Pin */
+  GPIO_InitStruct.Pin = Alarm_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(Alarm_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : Buzzer_Pin */
+  GPIO_InitStruct.Pin = Buzzer_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LED_B_GPIO_Port, &GPIO_InitStruct);
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
+  HAL_GPIO_Init(Buzzer_GPIO_Port, &GPIO_InitStruct);
 
 }
 
