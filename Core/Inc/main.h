@@ -60,16 +60,21 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define Mode_Pin GPIO_PIN_0
 #define Mode_GPIO_Port GPIOA
+#define Mode_EXTI_IRQn EXTI0_IRQn
 #define OK_Pin GPIO_PIN_1
 #define OK_GPIO_Port GPIOA
+#define OK_EXTI_IRQn EXTI1_IRQn
 #define Inc_Pin GPIO_PIN_2
 #define Inc_GPIO_Port GPIOA
+#define Inc_EXTI_IRQn EXTI2_IRQn
 #define Nav_Pin GPIO_PIN_3
 #define Nav_GPIO_Port GPIOA
-#define Alarm_Pin GPIO_PIN_4
-#define Alarm_GPIO_Port GPIOB
-#define Buzzer_Pin GPIO_PIN_5
+#define Nav_EXTI_IRQn EXTI3_IRQn
+#define Buzzer_Pin GPIO_PIN_4
 #define Buzzer_GPIO_Port GPIOB
+#define Alarm_Pin GPIO_PIN_5
+#define Alarm_GPIO_Port GPIOB
+#define Alarm_EXTI_IRQn EXTI9_5_IRQn
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
