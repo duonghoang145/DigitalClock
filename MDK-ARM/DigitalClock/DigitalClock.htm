@@ -3,7 +3,7 @@
 <title>Static Call Graph - [DigitalClock\DigitalClock.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image DigitalClock\DigitalClock.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Fri Dec 03 09:20:02 2021
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Fri Dec 03 10:51:36 2021
 <BR><P>
 <H3>Maximum Stack Usage =        324 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -809,7 +809,7 @@ Global Symbols
 <LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CLCD_I2C_SetCursor
 <LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CLCD_I2C_Clear
 </UL>
-<BR>[Called By]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<BR>[Called By]<UL><LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_EXTI_Callback
 </UL>
 
 <P><STRONG><a name="[8e]"></a>Display_Date</STRONG> (Thumb, 54 bytes, Stack size 8 bytes, main.o(i.Display_Date))
@@ -831,7 +831,7 @@ Global Symbols
 <LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CLCD_I2C_SetCursor
 <LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CLCD_I2C_Clear
 </UL>
-<BR>[Called By]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<BR>[Called By]<UL><LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_EXTI_Callback
 </UL>
 
 <P><STRONG><a name="[90]"></a>Display_SetTime</STRONG> (Thumb, 30 bytes, Stack size 8 bytes, main.o(i.Display_SetTime))
@@ -841,7 +841,7 @@ Global Symbols
 <LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CLCD_I2C_SetCursor
 <LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CLCD_I2C_Clear
 </UL>
-<BR>[Called By]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<BR>[Called By]<UL><LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_EXTI_Callback
 </UL>
 
 <P><STRONG><a name="[91]"></a>Display_Time</STRONG> (Thumb, 54 bytes, Stack size 8 bytes, main.o(i.Display_Time))
@@ -906,11 +906,14 @@ Global Symbols
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CLCD_WriteI2C
 </UL>
 
-<P><STRONG><a name="[94]"></a>HAL_GPIO_EXTI_Callback</STRONG> (Thumb, 412 bytes, Stack size 40 bytes, main.o(i.HAL_GPIO_EXTI_Callback))
+<P><STRONG><a name="[94]"></a>HAL_GPIO_EXTI_Callback</STRONG> (Thumb, 432 bytes, Stack size 40 bytes, main.o(i.HAL_GPIO_EXTI_Callback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 208 + Unknown Stack Size
 <LI>Call Chain = HAL_GPIO_EXTI_Callback &rArr; Display_Date &rArr; DS3231_GetDate &rArr; HAL_I2C_Mem_Read &rArr; I2C_RequestMemoryRead &rArr; I2C_WaitOnMasterAddressFlagUntilTimeout
 </UL>
-<BR>[Calls]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Display_Date
+<BR>[Calls]<UL><LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Display_SetTime
+<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Display_SetAlarm
+<LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Display_Date
+<LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Display_ChangeDisplay
 <LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CLCD_I2C_WriteString
 <LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2sprintf
 </UL>
@@ -1289,7 +1292,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DS3231_GetTemp
 </UL>
 
-<P><STRONG><a name="[51]"></a>main</STRONG> (Thumb, 508 bytes, Stack size 8 bytes, main.o(i.main))
+<P><STRONG><a name="[51]"></a>main</STRONG> (Thumb, 494 bytes, Stack size 8 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 216 + Unknown Stack Size
 <LI>Call Chain = main &rArr; DS3231_GetTemp &rArr; force_temp_conv &rArr; HAL_I2C_Mem_Read &rArr; I2C_RequestMemoryRead &rArr; I2C_WaitOnMasterAddressFlagUntilTimeout
 </UL>
@@ -1301,9 +1304,6 @@ Global Symbols
 <LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
 <LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MonthPrint
 <LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Display_Time
-<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Display_SetTime
-<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Display_SetAlarm
-<LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Display_ChangeDisplay
 <LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Display_Adjust
 <LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_TIM2_Init
 <LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_GPIO_Init
