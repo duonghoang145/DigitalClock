@@ -28,6 +28,39 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+enum
+{
+	ModeIdle = 0,
+	ModeSetAlarm,
+	ModeSetTime,
+	ModeChangeDisplay,
+	ModeAlarm,
+	ModeAdjust
+}ModeEnum;
+uint8_t Mode = ModeIdle;
+
+enum
+{
+	AdjustHour = 0,
+	AdjustMin,
+	AdjustSec,
+	AdjustYear,
+	AdjustMonth,
+	AdjustDate,
+	AdjustFinish
+}AdjustEnum;
+uint8_t Adjust = AdjustHour;
+
+uint8_t tim2_flag = 0;// flag 1s 
+uint8_t alarm_flag = 0;// flag check status alarm
+uint8_t finish_flag = 0;// flag finish adjust time and date
+
+uint8_t isSetAlarm = 0;
+uint8_t isSetTime = 0;
+uint8_t isChangeDisplay = 0;
+
+uint8_t count_5s = 0;// count 5s for off alarm
+
 uint8_t device;
 DS3231_Name DS3231;
 CLCD_I2C_Name LCD1;
@@ -38,6 +71,7 @@ float Temp;
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define TIME_OFF_ALARM 5
 
 /* USER CODE END PD */
 
@@ -95,36 +129,227 @@ void MonthPrint(uint8_t Month)
 	else if (Month == 12)
 		sprintf(ASCII, "December");
 }
+
+void Display_SetAlarm()
+{
+	CLCD_I2C_Clear(&LCD1);
+	CLCD_I2C_SetCursor(&LCD1, 0, 0);
+	CLCD_I2C_WriteString(&LCD1,"Set Alarm");
+}
+
+void Display_SetTime()
+{
+	CLCD_I2C_Clear(&LCD1);
+	CLCD_I2C_SetCursor(&LCD1, 0, 0);
+	CLCD_I2C_WriteString(&LCD1,"Set Time");
+}
+
+void Display_Time()
+{
+	DS3231_GetTime(&DS3231);
+	sprintf(buffer, "%02d:%02d:%02d", DS3231.Hours, DS3231.Min, DS3231.Sec);
+	CLCD_I2C_SetCursor(&LCD1, 0, 1);
+	CLCD_I2C_WriteString(&LCD1, buffer);
+}
+
+
+void Display_Date()
+{
+	DS3231_GetDate(&DS3231);
+	//MonthPrint(DS3231.Month);	
+	sprintf(buffer, "%02d,%02d,20%02d", DS3231.Date, DS3231.Month, DS3231.Year);
+	CLCD_I2C_SetCursor(&LCD1, 0, 1);
+	CLCD_I2C_WriteString(&LCD1, buffer);
+}
+
+void Display_ChangeDisplay()
+{
+	CLCD_I2C_Clear(&LCD1);
+	CLCD_I2C_SetCursor(&LCD1, 0, 0);
+	CLCD_I2C_WriteString(&LCD1,"Change Display");
+}
+
+void Display_Adjust()
+{
+	CLCD_I2C_CursorOn(&LCD1);
+	switch(Adjust)
+	{
+		case AdjustHour:
+			CLCD_I2C_SetCursor(&LCD1, 0, 1);			
+			break;
+		case AdjustMin:
+			CLCD_I2C_SetCursor(&LCD1, 3, 1);
+			break;
+		case AdjustSec:
+			CLCD_I2C_SetCursor(&LCD1, 6, 1);
+			break;
+		case AdjustYear:
+			CLCD_I2C_SetCursor(&LCD1, 6, 1);
+			break;
+		case AdjustMonth:
+			CLCD_I2C_SetCursor(&LCD1, 3, 1);
+			break;
+		case AdjustDate:
+			CLCD_I2C_SetCursor(&LCD1, 0, 1);
+			break;
+	}
+}
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(GPIO_Pin);
   if(GPIO_Pin == Nav_Pin)
 	{
-		
+		switch(Adjust)
+		{
+			case AdjustHour:
+				if( DS3231.Hours > 0)
+					DS3231.Hours -= 1;
+				else DS3231.Hours = 23;
+				sprintf(buffer, "%02d", DS3231.Hours);
+				break;
+			case AdjustMin:
+				if(DS3231.Min > 0)
+					DS3231.Min -= 1;
+				else DS3231.Min = 59;
+				sprintf(buffer, "%02d", DS3231.Min);
+				break;
+			case AdjustSec:
+				if(DS3231.Sec > 0)
+					DS3231.Sec -= 1;
+				else DS3231.Sec = 59;
+				sprintf(buffer, "%02d", DS3231.Sec);
+				break;
+			case AdjustYear:
+				DS3231.Year -= 1;
+				sprintf(buffer,"20%02d", DS3231.Year);
+				break;
+			case AdjustMonth:
+				if(DS3231.Month > 1)
+					DS3231.Month -= 1;
+				else DS3231.Month = 12;
+				sprintf(buffer,"%02d", DS3231.Month);
+				break;
+			case AdjustDate:
+				if(DS3231.Date > 1)
+					DS3231.Date -= 1;
+				else DS3231.Date = 31;
+				sprintf(buffer,"%02d", DS3231.Day);
+				break;
+		}
+		CLCD_I2C_WriteString(&LCD1, buffer);
+	}
+	if(GPIO_Pin == Inc_Pin)
+	{
+		switch(Adjust)
+		{
+			case AdjustHour:
+				if( DS3231.Hours < 23)
+					DS3231.Hours += 1;
+				else DS3231.Hours = 0;
+				sprintf(buffer, "%02d", DS3231.Hours);
+				break;
+			case AdjustMin:
+				if(DS3231.Min < 59)
+					DS3231.Min += 1;
+				else DS3231.Min = 0;
+				sprintf(buffer, "%02d", DS3231.Min);
+				break;
+			case AdjustSec:
+				if(DS3231.Sec < 59)
+					DS3231.Sec += 1;
+				else DS3231.Sec = 0;
+				sprintf(buffer, "%02d", DS3231.Sec);
+				break;
+			case AdjustYear:
+				DS3231.Year += 1;
+				sprintf(buffer,"20%02d", DS3231.Year);
+				break;
+			case AdjustMonth:
+				if(DS3231.Month < 12)
+					DS3231.Month += 1;
+				else DS3231.Month = 1;
+				sprintf(buffer,"%02d", DS3231.Month);
+				break;
+			case AdjustDate:
+				if(DS3231.Date < 31)
+					DS3231.Date += 1;
+				else DS3231.Date = 1;
+				sprintf(buffer,"%02d", DS3231.Day);
+				break;
+		}
+		CLCD_I2C_WriteString(&LCD1, buffer);
+	}
+	if(GPIO_Pin == Mode_Pin)
+	{
+		switch(Mode)
+		{
+			case ModeIdle:
+				Mode = ModeSetAlarm;
+				break;
+			case ModeSetAlarm:
+				Mode = ModeSetTime;
+				break;
+			case ModeSetTime:
+				Mode = ModeChangeDisplay;
+				break;
+			case ModeChangeDisplay:
+				Mode = ModeIdle;
+				break;
+			case ModeAdjust:
+				finish_flag = 1;
+				break;
+		}
+	}
+	if(GPIO_Pin == Alarm_Pin)
+	{
+		Mode = ModeAlarm;
+	}
+	if(GPIO_Pin == OK_Pin)
+	{
+		switch(Mode)
+		{
+			case ModeAlarm:
+				alarm_flag = 1;
+				break;
+			case ModeSetAlarm:
+				isSetAlarm = 1;
+				break;
+			case ModeSetTime:
+				isSetTime = 1;
+				break;
+			case ModeChangeDisplay:
+				isChangeDisplay = 1;
+				break;
+			case ModeAdjust:
+				Adjust += 1;					
+				if( Adjust == AdjustYear)
+					Display_Date();
+				if( Adjust == AdjustFinish)
+					finish_flag = 1;
+				break;
+		}
 	}
 }
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)/*Ham timer ngat*/
 {
   UNUSED(htim);
-	DS3231_GetTime(&DS3231);
-	sprintf(buffer, "%02d:%02d:%02d", DS3231.Hours, DS3231.Min, DS3231.Sec);
-	CLCD_I2C_SetCursor(&LCD1, 0, 0);
-	CLCD_I2C_WriteString(&LCD1, buffer);
-	
-	
-	DS3231_GetDate(&DS3231);
-  MonthPrint(DS3231.Month);	
-	sprintf(buffer, "%02d,%s,20%02d", DS3231.Date, ASCII, DS3231.Year);
-	CLCD_I2C_SetCursor(&LCD1, 0, 1);
-	CLCD_I2C_WriteString(&LCD1, buffer);
-		
-	Temp = DS3231_GetTemp(&DS3231);
-	CLCD_I2C_SetCursor(&LCD1, 10, 0);
-	sprintf(buffer, "%.1f", Temp);
-	CLCD_I2C_WriteString(&LCD1, buffer);
-	CLCD_I2C_WriteChar(&LCD1, 223);
-	CLCD_I2C_WriteChar(&LCD1, 67);
+	switch(Mode)
+	{
+		case ModeIdle:
+			tim2_flag = 1;
+			break;
+		case ModeAlarm:
+			count_5s += 1;
+			if(count_5s == TIME_OFF_ALARM)
+			{
+				alarm_flag = 1;
+				count_5s = 0;
+			}
+			break;
+	}
+
 }
 
 
@@ -173,8 +398,6 @@ int main(void)
 		}
 	}
 	DS3231_Init(&DS3231, &hi2c1);
-//	DS3231_SetTime(&DS3231, 3,2,0);
-//	DS3231_SetDate(&DS3231, 4,29,10,21);
 	CLCD_I2C_Init(&LCD1,&hi2c1,0x4E,16,2);
 	HAL_TIM_Base_Start_IT(&htim2);
 	
@@ -184,7 +407,94 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		
+		switch( Mode)
+		{
+			case ModeIdle:
+				if(tim2_flag)
+				{
+						DS3231_GetTime(&DS3231);
+						sprintf(buffer, "%02d:%02d:%02d", DS3231.Hours, DS3231.Min, DS3231.Sec);
+						CLCD_I2C_SetCursor(&LCD1, 0, 0);
+						CLCD_I2C_WriteString(&LCD1, buffer);
+						
+						DS3231_GetDate(&DS3231);
+						MonthPrint(DS3231.Month);	
+						sprintf(buffer, "%02d,%s,20%02d", DS3231.Date, ASCII, DS3231.Year);
+						CLCD_I2C_SetCursor(&LCD1, 0, 1);
+						CLCD_I2C_WriteString(&LCD1, buffer);
+							
+						Temp = DS3231_GetTemp(&DS3231);
+						CLCD_I2C_SetCursor(&LCD1, 10, 0);
+						sprintf(buffer, "%.1f", Temp);
+						CLCD_I2C_WriteString(&LCD1, buffer);
+						CLCD_I2C_WriteChar(&LCD1, 223);
+						CLCD_I2C_WriteChar(&LCD1, 67);
+					tim2_flag = 0;
+				}
+				break;
+			case ModeSetTime:
+				Display_SetTime();
+				if(isSetTime)
+				{
+					Mode = ModeAdjust;
+					Display_Time();
+					Adjust = AdjustHour;
+				}
+				break;
+			case ModeChangeDisplay:
+				Display_ChangeDisplay();
+				if(isChangeDisplay)
+				{
+					// change display func
+				}
+				break;
+			case ModeSetAlarm:
+				Display_SetAlarm();
+				if(isSetAlarm)
+				{
+					Mode = ModeAdjust;
+					Display_Time();
+					Adjust = AdjustHour;
+				}
+				break;
+			case ModeAlarm:
+				HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, 0);
+				if(alarm_flag)
+				{
+					HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, 1);
+					alarm_flag = 0;
+					Mode = ModeIdle;
+				}
+				break;
+			case ModeAdjust:
+				if(isSetAlarm)
+				{					
+					Display_Adjust();
+					if(finish_flag)
+					{
+						//set alarm time and date func
+						DS3231_SetAlarmTime(&DS3231, DS3231.Hours, DS3231.Min, DS3231.Sec);
+						DS3231_SetAlarmDate(&DS3231, DS3231.Day, DS3231.Date);
+						Mode = ModeSetTime;
+						finish_flag = 0;
+						isSetAlarm = 0;
+					}
+				}
+				if(isSetTime)
+				{
+					Display_Adjust();
+					if(finish_flag)
+					{
+						//set time and date func
+						DS3231_SetTime(&DS3231, DS3231.Hours, DS3231.Min, DS3231.Sec);
+						DS3231_SetDate(&DS3231, DS3231.Day, DS3231.Date, DS3231.Month, DS3231.Year);
+						Mode = ModeChangeDisplay;
+						finish_flag = 0;
+						isSetTime = 0;
+					}
+				}
+				break;
+		}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

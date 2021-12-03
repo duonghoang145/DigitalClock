@@ -43,6 +43,17 @@ static void I2C_ReadTemp(DS3231_Name* DS3231)
 {
 	HAL_I2C_Mem_Read(DS3231->I2C, DS3231_ADDRESS, 0x11, I2C_MEMADD_SIZE_8BIT, DS3231->TempBuff, 2, 1000);
 }
+
+static void I2C_WriteAlarmTime(DS3231_Name* DS3231)
+{
+	HAL_I2C_Mem_Write(DS3231->I2C, DS3231_ADDRESS, 7, I2C_MEMADD_SIZE_8BIT, DS3231->TxTimeBuff, 3, 1000);
+}
+
+static void I2C_WriteAlarmDate(DS3231_Name* DS3231)
+{
+	HAL_I2C_Mem_Write(DS3231->I2C, DS3231_ADDRESS, 9, I2C_MEMADD_SIZE_8BIT, DS3231->TxDateBuff, 2, 1000);
+}
+
 void force_temp_conv (DS3231_Name* DS3231)
 {
 	uint8_t status=0;
@@ -107,5 +118,18 @@ float DS3231_GetTemp(DS3231_Name* DS3231)
 	force_temp_conv(DS3231);
 	I2C_ReadTemp(DS3231);
 	return((DS3231->TempBuff[0])+(DS3231->TempBuff[1]>>6)/4.0);
+}
+void DS3231_SetAlarmTime(DS3231_Name* DS3231, uint8_t Hour, uint8_t Min, uint8_t Sec)
+{
+	DS3231->TxTimeBuff[0] = DEC2BCD(Sec);
+	DS3231->TxTimeBuff[1] = DEC2BCD(Min);
+	DS3231->TxTimeBuff[2] = DEC2BCD(Hour);
+	I2C_WriteAlarmTime(DS3231);
+}
+void DS3231_SetAlarmDate(DS3231_Name* DS3231, uint8_t Day, uint8_t Date)
+{
+	DS3231->TxDateBuff[0] = DEC2BCD(Day);
+	DS3231->TxDateBuff[1] = DEC2BCD(Date);
+	I2C_WriteAlarmDate(DS3231);
 }
 

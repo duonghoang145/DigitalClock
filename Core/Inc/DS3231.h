@@ -45,6 +45,8 @@ void DS3231_GetTime(DS3231_Name* DS3231);
 void DS3231_SetDate(DS3231_Name* DS3231, uint8_t Day, uint8_t Date, uint8_t Month, uint8_t Year);
 void DS3231_GetDate(DS3231_Name* DS3231);
 float DS3231_GetTemp(DS3231_Name* DS3231);
+void DS3231_SetAlarmTime(DS3231_Name* DS3231, uint8_t Hour, uint8_t Min, uint8_t Sec);
+void DS3231_SetAlarmDate(DS3231_Name* DS3231, uint8_t Day, uint8_t Date);
 	
 #endif
 
