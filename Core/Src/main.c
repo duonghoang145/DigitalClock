@@ -286,12 +286,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		switch(Mode)
 		{
 			case ModeIdle:
+				Display_SetAlarm();
 				Mode = ModeSetAlarm;
 				break;
 			case ModeSetAlarm:
 				Mode = ModeSetTime;
+				Display_SetTime();
 				break;
 			case ModeSetTime:
+				Display_ChangeDisplay();
 				Mode = ModeChangeDisplay;
 				break;
 			case ModeChangeDisplay:
@@ -433,7 +436,7 @@ int main(void)
 				}
 				break;
 			case ModeSetTime:
-				Display_SetTime();
+				//Display_SetTime();
 				if(isSetTime)
 				{
 					Mode = ModeAdjust;
@@ -442,14 +445,14 @@ int main(void)
 				}
 				break;
 			case ModeChangeDisplay:
-				Display_ChangeDisplay();
+				//Display_ChangeDisplay();
 				if(isChangeDisplay)
 				{
 					// change display func
 				}
 				break;
 			case ModeSetAlarm:
-				Display_SetAlarm();
+				//Display_SetAlarm();
 				if(isSetAlarm)
 				{
 					Mode = ModeAdjust;
