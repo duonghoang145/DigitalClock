@@ -199,7 +199,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(GPIO_Pin);
-  if(GPIO_Pin == Nav_Pin)
+  if(GPIO_Pin == Down_Pin)
 	{
 		switch(Adjust)
 		{
@@ -240,7 +240,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		}
 		CLCD_I2C_WriteString(&LCD1, buffer);
 	}
-	if(GPIO_Pin == Inc_Pin)
+	if(GPIO_Pin == Up_Pin)
 	{
 		switch(Adjust)
 		{
@@ -281,7 +281,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		}
 		CLCD_I2C_WriteString(&LCD1, buffer);
 	}
-	if(GPIO_Pin == Mode_Pin)
+	if(GPIO_Pin == Menu_Pin)
 	{
 		switch(Mode)
 		{
@@ -306,7 +306,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	{
 		Mode = ModeAlarm;
 	}
-	if(GPIO_Pin == OK_Pin)
+	if(GPIO_Pin == Enter_Pin)
 	{
 		switch(Mode)
 		{
@@ -644,8 +644,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Mode_Pin OK_Pin Inc_Pin Nav_Pin */
-  GPIO_InitStruct.Pin = Mode_Pin|OK_Pin|Inc_Pin|Nav_Pin;
+  /*Configure GPIO pins : Menu_Pin Enter_Pin Up_Pin Down_Pin */
+  GPIO_InitStruct.Pin = Menu_Pin|Enter_Pin|Up_Pin|Down_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);

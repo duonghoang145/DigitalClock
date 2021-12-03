@@ -58,18 +58,18 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define Mode_Pin GPIO_PIN_0
-#define Mode_GPIO_Port GPIOA
-#define Mode_EXTI_IRQn EXTI0_IRQn
-#define OK_Pin GPIO_PIN_1
-#define OK_GPIO_Port GPIOA
-#define OK_EXTI_IRQn EXTI1_IRQn
-#define Inc_Pin GPIO_PIN_2
-#define Inc_GPIO_Port GPIOA
-#define Inc_EXTI_IRQn EXTI2_IRQn
-#define Nav_Pin GPIO_PIN_3
-#define Nav_GPIO_Port GPIOA
-#define Nav_EXTI_IRQn EXTI3_IRQn
+#define Menu_Pin GPIO_PIN_0
+#define Menu_GPIO_Port GPIOA
+#define Menu_EXTI_IRQn EXTI0_IRQn
+#define Enter_Pin GPIO_PIN_1
+#define Enter_GPIO_Port GPIOA
+#define Enter_EXTI_IRQn EXTI1_IRQn
+#define Up_Pin GPIO_PIN_2
+#define Up_GPIO_Port GPIOA
+#define Up_EXTI_IRQn EXTI2_IRQn
+#define Down_Pin GPIO_PIN_3
+#define Down_GPIO_Port GPIOA
+#define Down_EXTI_IRQn EXTI3_IRQn
 #define Buzzer_Pin GPIO_PIN_4
 #define Buzzer_GPIO_Port GPIOB
 #define Alarm_Pin GPIO_PIN_5
