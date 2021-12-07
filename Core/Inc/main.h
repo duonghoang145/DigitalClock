@@ -72,9 +72,6 @@ void Error_Handler(void);
 #define Down_EXTI_IRQn EXTI3_IRQn
 #define Buzzer_Pin GPIO_PIN_4
 #define Buzzer_GPIO_Port GPIOB
-#define Alarm_Pin GPIO_PIN_5
-#define Alarm_GPIO_Port GPIOB
-#define Alarm_EXTI_IRQn EXTI9_5_IRQn
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
