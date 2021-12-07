@@ -19,6 +19,7 @@
 "digitalclock\stm32f1xx_hal_exti.o"
 "digitalclock\stm32f1xx_hal_tim.o"
 "digitalclock\stm32f1xx_hal_tim_ex.o"
+"digitalclock\stm32f1xx_hal_uart.o"
 "digitalclock\system_stm32f1xx.o"
 --strict --scatter "DigitalClock\DigitalClock.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols

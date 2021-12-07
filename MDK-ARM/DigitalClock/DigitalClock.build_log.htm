@@ -22,55 +22,69 @@ Dialog DLL:      TCM.DLL V1.46.0.0
  
 <h2>Project:</h2>
 C:\Users\DuongHoang\Downloads\STM32\DigitalClock\MDK-ARM\DigitalClock.uvprojx
-Project File Date:  12/03/2021
+Project File Date:  12/07/2021
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'DigitalClock'
 compiling main.c...
-../Core/Src/main.c(108): warning:  #223-D: function "sprintf" declared implicitly
-  		sprintf(ASCII, "January");
-../Core/Src/main.c(110): warning:  #223-D: function "sprintf" declared implicitly
-  		sprintf(ASCII, "Febnuary");
-../Core/Src/main.c(112): warning:  #223-D: function "sprintf" declared implicitly
-  		sprintf(ASCII, "March");
-../Core/Src/main.c(114): warning:  #223-D: function "sprintf" declared implicitly
-  		sprintf(ASCII, "April");
-../Core/Src/main.c(116): warning:  #223-D: function "sprintf" declared implicitly
-  		sprintf(ASCII, "May");
-../Core/Src/main.c(118): warning:  #223-D: function "sprintf" declared implicitly
-  		sprintf(ASCII, "June");
-../Core/Src/main.c(120): warning:  #223-D: function "sprintf" declared implicitly
-  		sprintf(ASCII, "July");
-../Core/Src/main.c(122): warning:  #223-D: function "sprintf" declared implicitly
-  		sprintf(ASCII, "August");
-../Core/Src/main.c(124): warning:  #223-D: function "sprintf" declared implicitly
-  		sprintf(ASCII, "September");
-../Core/Src/main.c(126): warning:  #223-D: function "sprintf" declared implicitly
-  		sprintf(ASCII, "October");
-../Core/Src/main.c(128): warning:  #223-D: function "sprintf" declared implicitly
-  		sprintf(ASCII, "November");
-../Core/Src/main.c(130): warning:  #223-D: function "sprintf" declared implicitly
-  		sprintf(ASCII, "December");
-../Core/Src/main.c(150): warning:  #223-D: function "sprintf" declared implicitly
+../Core/Src/main.c(52): warning:  #68-D: integer conversion resulted in a change of sign
+  uint8_t Adjust = -1;
+../Core/Src/main.c(119): warning:  #223-D: function "sprintf" declared implicitly
+  		sprintf(bufferm, "January");
+../Core/Src/main.c(121): warning:  #223-D: function "sprintf" declared implicitly
+  		sprintf(bufferm, "Febnuary");
+../Core/Src/main.c(123): warning:  #223-D: function "sprintf" declared implicitly
+  		sprintf(bufferm, "March");
+../Core/Src/main.c(125): warning:  #223-D: function "sprintf" declared implicitly
+  		sprintf(bufferm, "April");
+../Core/Src/main.c(127): warning:  #223-D: function "sprintf" declared implicitly
+  		sprintf(bufferm, "May");
+../Core/Src/main.c(129): warning:  #223-D: function "sprintf" declared implicitly
+  		sprintf(bufferm, "June");
+../Core/Src/main.c(131): warning:  #223-D: function "sprintf" declared implicitly
+  		sprintf(bufferm, "July");
+../Core/Src/main.c(133): warning:  #223-D: function "sprintf" declared implicitly
+  		sprintf(bufferm, "August");
+../Core/Src/main.c(135): warning:  #223-D: function "sprintf" declared implicitly
+  		sprintf(bufferm, "September");
+../Core/Src/main.c(137): warning:  #223-D: function "sprintf" declared implicitly
+  		sprintf(bufferm, "October");
+../Core/Src/main.c(139): warning:  #223-D: function "sprintf" declared implicitly
+  		sprintf(bufferm, "November");
+../Core/Src/main.c(141): warning:  #223-D: function "sprintf" declared implicitly
+  		sprintf(bufferm, "December");
+../Core/Src/main.c(161): warning:  #223-D: function "sprintf" declared implicitly
   	sprintf(buffer, "%02d:%02d:%02d", DS3231.Hours, DS3231.Min, DS3231.Sec);
-../Core/Src/main.c(160): warning:  #223-D: function "sprintf" declared implicitly
+../Core/Src/main.c(170): warning:  #223-D: function "sprintf" declared implicitly
   	sprintf(buffer, "%02d,%02d,20%02d", DS3231.Date, DS3231.Month, DS3231.Year);
-../Core/Src/main.c(210): warning:  #223-D: function "sprintf" declared implicitly
-  				sprintf(buffer, "%02d", DS3231.Hours);
-../Core/Src/main.c(251): warning:  #223-D: function "sprintf" declared implicitly
-  				sprintf(buffer, "%02d", DS3231.Hours);
-../Core/Src/main.c(416): warning:  #223-D: function "sprintf" declared implicitly
-  						sprintf(buffer, "%02d:%02d:%02d", DS3231.Hours, DS3231.Min, DS3231.Sec);
-../Core/Src/main.c(461): warning:  #188-D: enumerated type mixed with another type
-  				HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, 0);
-../Core/Src/main.c(464): warning:  #188-D: enumerated type mixed with another type
-  					HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, 1);
-../Core/Src/main.c: 19 warnings, 0 errors
+../Core/Src/main.c(262): warning:  #223-D: function "sprintf" declared implicitly
+  			sprintf(buffer, "Time %02d:%02d", AlarmHours, AlarmMin);
+../Core/Src/main.c(304): warning:  #68-D: integer conversion resulted in a change of sign
+  			Adjust = -1;
+../Core/Src/main.c(324): warning:  #223-D: function "sprintf" declared implicitly
+  			sprintf(buffer, "Time %02d:%02d", AlarmHours, AlarmMin);
+../Core/Src/main.c(371): warning:  #223-D: function "sprintf" declared implicitly
+  			sprintf(buffer, "Time %02d:%02d:%02d", DS3231.Hours, DS3231.Min, DS3231.Sec);
+../Core/Src/main.c(464): warning:  #223-D: function "sprintf" declared implicitly
+  			sprintf(buffer, "Time %02d:%02d", AlarmHours, AlarmMin);
+../Core/Src/main.c(511): warning:  #223-D: function "sprintf" declared implicitly
+  			sprintf(buffer, "Time %02d:%02d:%02d", DS3231.Hours, DS3231.Min, DS3231.Sec);
+../Core/Src/main.c(611): warning:  #188-D: enumerated type mixed with another type
+  		HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, 1);
+../Core/Src/main.c(613): warning:  #188-D: enumerated type mixed with another type
+  		HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, 0);
+../Core/Src/main.c(615): warning:  #188-D: enumerated type mixed with another type
+  		HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, 1);
+../Core/Src/main.c(617): warning:  #188-D: enumerated type mixed with another type
+  		HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, 0);
+../Core/Src/main.c(630): warning:  #223-D: function "sprintf" declared implicitly
+  		sprintf(buffer, "%02d,%s,20%02d", DS3231.Date, bufferm, DS3231.Year);
+../Core/Src/main.c: 26 warnings, 0 errors
 linking...
-Program Size: Code=17560 RO-data=488 RW-data=32 ZI-data=1864  
+Program Size: Code=21152 RO-data=488 RW-data=28 ZI-data=2004  
 FromELF: creating hex file...
-"DigitalClock\DigitalClock.axf" - 0 Error(s), 19 Warning(s).
+"DigitalClock\DigitalClock.axf" - 0 Error(s), 26 Warning(s).
 
 <h2>Software Packages used:</h2>
 

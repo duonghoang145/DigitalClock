@@ -77,9 +77,45 @@ static uint8_t DEC2BCD(uint8_t data)
 
 
 //****************************************HIGH Level Layer *************************************************//
+void DS3231_SetInterruptMode(DS3231_Name* DS3231, DS3231_State enable)
+{
+	uint8_t control = 0;
+	uint8_t val = 0x04;
+	HAL_I2C_Mem_Read(DS3231->I2C, DS3231_ADDRESS, 0x0E, 1, &control, 1, 100);  // read control register
+	HAL_I2C_Mem_Write(DS3231->I2C, DS3231_ADDRESS, 0x0E, 1, &val, 1, 100);
+}
+void DS3231_EnableAlarm1(DS3231_Name* DS3231, DS3231_State enable)
+{
+	uint8_t control = 0;
+	HAL_I2C_Mem_Read(DS3231->I2C, DS3231_ADDRESS, 0x0E, 1, &control, 1, 100);  // read control register
+	HAL_I2C_Mem_Write(DS3231->I2C, DS3231_ADDRESS, 0x0E, 1, (uint8_t *)((control & (0xfe))|(enable & 0x01)), 1, 100);
+}
+void DS3231_ClearAlarm1Flag(DS3231_Name* DS3231)
+{
+	uint8_t status = 0;
+	HAL_I2C_Mem_Read(DS3231->I2C, DS3231_ADDRESS, 0x0F, 1, &status, 1, 100);  // read control register
+	HAL_I2C_Mem_Write(DS3231->I2C, DS3231_ADDRESS, 0x0F, 1, (uint8_t *)(status & (0xfe)), 1, 100);
+}
+void DS3231_EnableAlarm2(DS3231_Name* DS3231, DS3231_State enable)
+{
+	uint8_t control = 0;
+	HAL_I2C_Mem_Read(DS3231->I2C, DS3231_ADDRESS, 0x0E, 1, &control, 1, 100);  // read control register
+	HAL_I2C_Mem_Write(DS3231->I2C, DS3231_ADDRESS, 0x0E, 1, (uint8_t *)((control & (0xfd))|((enable & 0x01)<<1)), 1, 100);
+}
+void DS3231_ClearAlarm2Flag(DS3231_Name* DS3231)
+{
+	uint8_t status = 0;
+	HAL_I2C_Mem_Read(DS3231->I2C, DS3231_ADDRESS, 0x0F, 1, &status, 1, 100);  // read control register
+	HAL_I2C_Mem_Write(DS3231->I2C, DS3231_ADDRESS, 0x0F, 1, (uint8_t *)(status & (0xfd)), 1, 100);
+}
 void DS3231_Init(DS3231_Name* DS3231, I2C_HandleTypeDef* I2C_In)
 {
 	DS3231->I2C = I2C_In;
+	DS3231_EnableAlarm1(DS3231, DS3231_Disable);
+	DS3231_EnableAlarm2(DS3231, DS3231_Disable);
+	DS3231_ClearAlarm1Flag(DS3231);
+	DS3231_ClearAlarm2Flag(DS3231);
+	DS3231_SetInterruptMode(DS3231, DS3231_Enable);
 }
 
 void DS3231_SetTime(DS3231_Name* DS3231, uint8_t Hour, uint8_t Min, uint8_t Sec)
@@ -132,4 +168,3 @@ void DS3231_SetAlarmDate(DS3231_Name* DS3231, uint8_t Day, uint8_t Date)
 	DS3231->TxDateBuff[1] = DEC2BCD(Date);
 	I2C_WriteAlarmDate(DS3231);
 }
-

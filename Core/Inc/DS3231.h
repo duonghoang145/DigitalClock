@@ -38,7 +38,9 @@ typedef struct
 	uint8_t Year;
 	float Temp;
 }DS3231_Name;
-
+typedef enum DS3231_State{
+	DS3231_Disable=0, DS3231_Enable
+}DS3231_State;
 void DS3231_Init(DS3231_Name* DS3231, I2C_HandleTypeDef* I2C_In);
 void DS3231_SetTime(DS3231_Name* DS3231, uint8_t Hour, uint8_t Min, uint8_t Sec);
 void DS3231_GetTime(DS3231_Name* DS3231);
@@ -47,6 +49,11 @@ void DS3231_GetDate(DS3231_Name* DS3231);
 float DS3231_GetTemp(DS3231_Name* DS3231);
 void DS3231_SetAlarmTime(DS3231_Name* DS3231, uint8_t Hour, uint8_t Min, uint8_t Sec);
 void DS3231_SetAlarmDate(DS3231_Name* DS3231, uint8_t Day, uint8_t Date);
+void DS3231_SetInterruptMode(DS3231_Name* DS3231, DS3231_State enable);
+void DS3231_EnableAlarm1(DS3231_Name* DS3231, DS3231_State enable);
+void DS3231_ClearAlarm1Flag(DS3231_Name* DS3231);
+void DS3231_EnableAlarm2(DS3231_Name* DS3231, DS3231_State enable);
+void DS3231_ClearAlarm2Flag(DS3231_Name* DS3231);
 	
 #endif
 
