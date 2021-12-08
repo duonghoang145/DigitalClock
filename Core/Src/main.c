@@ -162,16 +162,13 @@ void Display_Time()
 			sprintf(buffer, "%02d:%02d:%02d AM", DS3231.Hours, DS3231.Min, DS3231.Sec);
 		} 
 		else if(DS3231.Hours == 12){
-			DS3231_SetTime(&DS3231, DS3231.Hours, DS3231.Min, DS3231.Sec);
 			sprintf(buffer, "%02d:%02d:%02d PM", DS3231.Hours, DS3231.Min, DS3231.Sec);
 		}
 		else if(DS3231.Hours > 12){
-			DS3231_SetTime(&DS3231, DS3231.Hours - 12, DS3231.Min, DS3231.Sec);
-			sprintf(buffer, "%02d:%02d:%02d PM", DS3231.Hours, DS3231.Min, DS3231.Sec);
+			sprintf(buffer, "%02d:%02d:%02d PM", DS3231.Hours - 12, DS3231.Min, DS3231.Sec);
 		}
 		else if(DS3231.Hours == 24){
-			DS3231_SetTime(&DS3231, DS3231.Hours - 12, DS3231.Min, DS3231.Sec);
-			sprintf(buffer, "%02d:%02d:%02d AM", DS3231.Hours, DS3231.Min, DS3231.Sec);
+			sprintf(buffer, "%02d:%02d:%02d AM", DS3231.Hours - 12, DS3231.Min, DS3231.Sec);
 		}
 	CLCD_I2C_SetCursor(&LCD1, 0, 0);
 	CLCD_I2C_WriteString(&LCD1, buffer);
