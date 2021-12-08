@@ -106,30 +106,44 @@ static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 void MonthPrint(uint8_t Month, char bufferm [16])
 {
-	if (Month == 1)
-		sprintf(bufferm, "January");
-	else if (Month == 2)
-		sprintf(bufferm, "Febnuary");
-	else if (Month == 3)
-		sprintf(bufferm, "March");
-	else if (Month == 4)
-		sprintf(bufferm, "April");
-	else if (Month == 5)
-		sprintf(bufferm, "May");
-	else if (Month == 6)
-		sprintf(bufferm, "June");
-	else if (Month == 7)
-		sprintf(bufferm, "July");
-	else if (Month == 8)
-		sprintf(bufferm, "August");
-	else if (Month == 9)
-		sprintf(bufferm, "September");
-	else if (Month == 10)
-		sprintf(bufferm, "October");
-	else if (Month == 11)
-		sprintf(bufferm, "November");
-	else if (Month == 12)
-		sprintf(bufferm, "December");
+	switch (Month){
+		case (1):
+			sprintf(bufferm, "January");
+		break;
+		case (2):
+			sprintf(bufferm, "Febnuary");
+		break;
+	  case (3):
+			sprintf(bufferm, "March");
+		break;
+	  case (4):
+			sprintf(bufferm, "April");
+		break;
+	  case (5):
+			sprintf(bufferm, "May");
+		break;
+	  case (6):
+			sprintf(bufferm, "June");
+		break;
+	  case (7):
+			sprintf(bufferm, "July");
+		break;
+	  case (8):
+			sprintf(bufferm, "August");
+		break;
+	  case (9):
+			sprintf(bufferm, "September");
+		break;
+	  case (10):
+			sprintf(bufferm, "October");
+		break;
+	  case (11):
+			sprintf(bufferm, "November");
+		break;
+	  case (12):
+			sprintf(bufferm, "December");
+		break;
+	}
 }
 
 void Display_SetAlarm()
