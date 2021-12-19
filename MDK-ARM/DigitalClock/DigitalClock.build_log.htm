@@ -30,29 +30,29 @@ Build target 'DigitalClock'
 compiling main.c...
 ../Core/Src/main.c(59): warning:  #68-D: integer conversion resulted in a change of sign
   uint8_t Adjust = -1;
-../Core/Src/main.c(111): warning:  #223-D: function "sprintf" declared implicitly
+../Core/Src/main.c(105): warning:  #223-D: function "sprintf" declared implicitly
   			sprintf(bufferm, "January");
-../Core/Src/main.c(169): warning:  #223-D: function "sprintf" declared implicitly
+../Core/Src/main.c(163): warning:  #223-D: function "sprintf" declared implicitly
   		sprintf(buffer, "%02d:%02d:%02d", DS3231.Hours, DS3231.Min, DS3231.Sec);
-../Core/Src/main.c(197): warning:  #223-D: function "sprintf" declared implicitly
+../Core/Src/main.c(191): warning:  #223-D: function "sprintf" declared implicitly
   	sprintf(buffer, "%02d,%s,20%02d", DS3231.Date, bufferm, DS3231.Year);
-../Core/Src/main.c(208): warning:  #223-D: function "sprintf" declared implicitly
+../Core/Src/main.c(202): warning:  #223-D: function "sprintf" declared implicitly
   	sprintf(buffer, "%02d", Temp);
-../Core/Src/main.c(218): warning:  #223-D: function "sprintf" declared implicitly
+../Core/Src/main.c(212): warning:  #223-D: function "sprintf" declared implicitly
   	sprintf(buffer, "Time %02d:%02d", AlarmHours, AlarmMin);
-../Core/Src/main.c(229): warning:  #223-D: function "sprintf" declared implicitly
+../Core/Src/main.c(223): warning:  #223-D: function "sprintf" declared implicitly
   	sprintf(buffer, "Time %02d:%02d:%02d", DS3231.Hours, DS3231.Min, DS3231.Sec);
-../Core/Src/main.c(274): warning:  #223-D: function "sprintf" declared implicitly
+../Core/Src/main.c(268): warning:  #223-D: function "sprintf" declared implicitly
   	sprintf(buffer, "%02d:%02d", DS3231.Hours, DS3231.Min);
-../Core/Src/main.c(365): warning:  #68-D: integer conversion resulted in a change of sign
+../Core/Src/main.c(359): warning:  #68-D: integer conversion resulted in a change of sign
   			Adjust = -1;
-../Core/Src/main.c(595): warning:  #188-D: enumerated type mixed with another type
+../Core/Src/main.c(589): warning:  #188-D: enumerated type mixed with another type
   		HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, 1);
-../Core/Src/main.c(597): warning:  #188-D: enumerated type mixed with another type
+../Core/Src/main.c(591): warning:  #188-D: enumerated type mixed with another type
   		HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, 0);
-../Core/Src/main.c(599): warning:  #188-D: enumerated type mixed with another type
+../Core/Src/main.c(593): warning:  #188-D: enumerated type mixed with another type
   		HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, 1);
-../Core/Src/main.c(601): warning:  #188-D: enumerated type mixed with another type
+../Core/Src/main.c(595): warning:  #188-D: enumerated type mixed with another type
   		HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, 0);
 ../Core/Src/main.c: 13 warnings, 0 errors
 linking...
@@ -81,7 +81,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.5.0
-Build Time Elapsed:  00:00:05
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>

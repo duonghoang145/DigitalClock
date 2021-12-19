@@ -58,13 +58,7 @@ enum
 }AdjustEnum;
 uint8_t Adjust = -1;
 
-uint8_t tim2_flag = 0;// flag 1s 
 uint8_t alarm_flag = 0;// flag check status alarm
-uint8_t finish_flag = 0;// flag finish adjust time and date
-
-uint8_t isChangeDisplay = 0;
-
-uint8_t count_5s = 0;// count 5s for off alarm
 
 uint8_t AlarmHours;
 uint8_t AlarmMin;
